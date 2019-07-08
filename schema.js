@@ -26,7 +26,7 @@ const inventorySchema = mongoose.Schema({
         required: true,
     },
     cost: {
-        type: Number,
+        type: String,
         required: true,
     },
     location: {
