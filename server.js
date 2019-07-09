@@ -88,6 +88,14 @@ server.put("/inventory/:id", function(req, res){
     });
 });
 
+server.delete("/inventory/:id", function(req, res){
+    inventoryModel.findByIdAndDelete(req.params.id).then(function(){
+        res.status(204).send();
+    }).catch(function(error){
+        res.status(400).json({msg: error.message});
+    });
+});
+
 
 
 //start the server and connect to database
