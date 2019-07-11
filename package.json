@@ -21,8 +21,10 @@
   "homepage": "https://github.com/btyrrell15/inventoryProjectServer#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "ebay-node-api": "^2.5.6",
     "express": "^4.17.1",
-    "mongoose": "^5.6.3"
+    "mongoose": "^5.6.3",
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
