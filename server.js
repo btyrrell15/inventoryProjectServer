@@ -106,12 +106,12 @@ var ensureAuthentication = function(req, res, next){
 //models
 var userModel = require("./models/user.js");
 
-//user endpoints
-server.get("/private", ensureAuthentication, function (req, res){
-    res.json ({
-        msg: 'Hello ${req.user.username}'
-    });
-});
+// //user endpoints
+// server.get("/private", ensureAuthentication, function (req, res){
+//     res.json ({
+//         msg: 'Hello ${req.user.username}'
+//     });
+// });
 
 //register
 server.post("/users/register", function(req, res){
@@ -169,7 +169,7 @@ server.get("/users/login/success", function(req, res){
 
 
 //Rest endpoints
-server.get("/inventory", function(req, res){
+server.get("/inventory", ensureAuthentication, function(req, res){
     inventoryModel.find().then(function(inventory){
         res.json({
             inventory: inventory
