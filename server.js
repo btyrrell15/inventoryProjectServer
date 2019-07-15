@@ -1,7 +1,12 @@
 const express = require("express");
-const cors = require("cors");
+const expressSession = require("express-session");
+// const cors = require("cors");
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
 const fetch = require("node-fetch");
+
 // const Ebay = require("ebay-node-api");
 // //
 // let ebay = new Ebay ({
@@ -32,9 +37,135 @@ var port = process.env.PORT || 3000;
 var inventoryModel = require("./schema.js");
 
 //middleware
-server.use(cors());
+// server.use(cors());
+server.use(function(req, res, next){
+    res.header("Access-Control-Allow-Origin", req.get("origin"));
+    res.header("Access-Control-Allow-Credentials", "true");
+    next();
+});
+server.options("*", function(req, res, next){
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+    next();
+});
 server.use(express.json());
 server.use(express.urlencoded({extended: false}));
+
+//passport middleware
+server.use(expressSession({
+    secret: "We hate Ebay",
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+        secure: false,
+        maxAge: 3600000
+    }
+}));
+server.use(passport.initialize());
+server.use(passport.session());
+passport.serializeUser(function(user, callback){
+    callback(null, user.id);
+});
+passport.deserializeUser(function(id, callback){
+    userModel.findById(id, function(error, user){
+        callback(error, user);
+    });
+});
+passport.use(new LocalStrategy(
+    function(username, password, done){
+        userModel.findOne({
+            username: username
+        }, function(error, user){
+            if (error) {
+                return done(error);
+            }
+            if (!user){
+                return done(null, false);
+            }
+            bcrypt.compare(password, user.password, function(error, isMatch){
+                if (isMatch){
+                    return done(null, user);
+                } else {
+                    return done(null, false);
+                }
+            });
+        });
+    }
+));
+
+var ensureAuthentication = function(req, res, next){
+    if (req.isAuthenticated()){
+        next();
+    } else {
+        res.status(403);
+        res.json({
+            msg: "Please login first"
+        });
+    }
+};
+
+//models
+var userModel = require("./models/user.js");
+
+//user endpoints
+server.get("/private", ensureAuthentication, function (req, res){
+    res.json ({
+        msg: 'Hello ${req.user.username}'
+    });
+});
+
+//register
+server.post("/users/register", function(req, res){
+    userModel.findOne({
+        username: req.body.username
+    }).then(function(user){
+        if (user){
+            res.status(422);
+            res.json({
+                msg: "That username is already in use."
+            });
+        } else {
+            bcrypt.genSalt(10, function(error, salt){
+                bcrypt.hash(req.body.password, salt, function(error, hashed_password){
+                    userModel.create({
+                        username: req.body.username,
+                        password: hashed_password
+                    }).then(function(new_user){
+                        res.status(201);
+                        res.json({
+                            user: new_user
+                        });
+                    }).catch(function(error){
+                        res.status(400).json({msg: error.message});
+                    });
+                });
+            });
+        }
+    }).catch(function(error){
+        res.status(400).json({msg: error.message});
+    });
+});
+
+//login
+server.post("/users/login",
+    passport.authenticate("local", {failureRedirect: "users/login/error"}),
+    function(req, res, next){
+        res.redirect("/users/login/success");
+    }
+);
+
+//login error and success
+server.get("/users/login/error", function(req, res){
+    res.status(403);
+    res.json({
+        msg: "Invalid username or password"
+    });
+});
+
+server.get("/users/login/success", function(req, res){
+    res.json({
+        msg: `Welcome ${req.user.username}`
+    });
+});
 
 
 //Rest endpoints
@@ -121,36 +252,36 @@ server.delete("/inventory/:id", function(req, res){
 });
 
 
-fetch(`${url}`, {
-    method: "GET",
-    headers: {"Authorization": "Bearer v^1.1#i^1#p^3#r^0#I^3#f^0#t^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" },
-}).then(res => res.json()).then(data => {
-    saveEbay(data);
-    console.log(data.categoryId);
-    // dummy(data);
-});
-
-// var dummy = function(data) {
+// fetch(`${url}`, {
+//     method: "GET",
+//     headers: {"Authorization": "Bearer v^1.1#i^1#I^3#r^0#p^3#f^0#t^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"},
+// }).then(res => res.json()).then(data => {
+//     saveEbay(data);
+//     console.log(data.categoryId);
+//
+// });
+//
+//
+//
+// var saveEbay = function(data){
 //     console.log(data);
-// }
-
-var saveEbay = function(data){
-    console.log(data);
-    inventoryModel.create({
-        sku: "none",
-        image: "none",
-        title: data.title,
-        category: data.categoryId,
-        marketplace: "eBay",
-        quantity: data.estimatedAvailabilities[0].estimatedAvailableQuantity,
-        cost: data.price.value,
-        location: data.itemLocation.postalCode,
-    }).then(function(new_item){
-        console.log(new_item);
-    }).catch(function(error){
-        console.log(error);
-    });
-};
+//     var rawId = data.itemId;
+//     var newId = rawId.slice(3, 15);
+//     inventoryModel.create({
+//         sku: newId,
+//         image: "none",
+//         title: data.title,
+//         category: data.categoryId,
+//         marketplace: "eBay",
+//         quantity: data.estimatedAvailabilities[0].estimatedAvailableQuantity,
+//         cost: data.price.value,
+//         location: data.itemLocation.postalCode,
+//     }).then(function(new_item){
+//         console.log(new_item);
+//     }).catch(function(error){
+//         console.log(error);
+//     });
+// };
 
 //start the server and connect to database
 mongoose.connect("mongodb+srv://btyrrell:fakepassword@mydatabase-izpfk.mongodb.net/Test?retryWrites=true&w=majority",{
