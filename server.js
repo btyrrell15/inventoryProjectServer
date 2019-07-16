@@ -171,6 +171,7 @@ server.get("/users/login/success", function(req, res){
 server.get('/logout', function(req, res){
     req.logout();
     // res.redirect('/');
+    res.send();
 });
 
 
