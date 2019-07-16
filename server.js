@@ -167,6 +167,12 @@ server.get("/users/login/success", function(req, res){
     });
 });
 
+//logout
+server.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+});
+
 
 //Rest endpoints
 server.get("/inventory", ensureAuthentication, function(req, res){
