@@ -174,7 +174,7 @@ server.get('/logout', function(req, res){
         res.send({message: 'Successfully logged out'});
     });
     // res.redirect('/');
-    res.send();
+    // res.send();
 });
 
 
