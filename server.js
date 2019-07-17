@@ -170,6 +170,7 @@ server.get("/users/login/success", function(req, res){
 //logout
 server.get('/logout', function(req, res){
     req.logout();
+    req.session = null;
     // res.redirect('/');
     res.send();
 });
