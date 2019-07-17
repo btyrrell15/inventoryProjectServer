@@ -169,8 +169,9 @@ server.get("/users/login/success", function(req, res){
 
 //logout
 server.get('/logout', function(req, res){
-    req.logout();
+    // req.logout();
     req.session.destroy(function(err) {
+        res.clearCookie("connect.sid");
         res.send({message: 'Successfully logged out'});
     });
     // res.redirect('/');
