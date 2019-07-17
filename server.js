@@ -98,7 +98,7 @@ var ensureAuthentication = function(req, res, next){
     } else {
         res.status(403);
         res.json({
-            msg: "Please login first"
+            msg: "Please, login first"
         });
     }
 };
@@ -172,7 +172,7 @@ server.get('/logout', function(req, res){
     // req.logout();
     req.session.destroy(function(err) {
         res.clearCookie("connect.sid");
-        res.send({message: 'Successfully logged out'});
+        res.send({message: 'Successful log out'});
     });
     // res.redirect('/');
     // res.send();
