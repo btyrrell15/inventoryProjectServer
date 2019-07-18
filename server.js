@@ -169,13 +169,13 @@ server.get("/users/login/success", function(req, res){
 
 //logout
 server.get('/logout', function(req, res){
-    // req.logout();
-    req.session.destroy(function(err) {
-        res.clearCookie("connect.sid");
-        res.send({message: 'Successful log out'});
-    });
+    req.logout();
+    // req.session.destroy(function(err) {
+    //     res.clearCookie("connect.sid");
+    //     res.send({message: 'Successful log out'});
+    // });
     // res.redirect('/');
-    // res.send();
+    res.send();
 });
 
 
