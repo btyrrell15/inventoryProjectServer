@@ -201,7 +201,9 @@ server.get("/users/:id", function(req, res){
 server.get("/inventory", ensureAuthentication, function(req, res){
     inventoryModel.find().then(function(inventory){
         res.json({
-            inventory: inventory
+            inventory: inventory,
+            user_id: req.user._id,
+            user_name: req.user.username,
         });
     }).catch(function(error){
         res.status(400).json({msg: error.message});
