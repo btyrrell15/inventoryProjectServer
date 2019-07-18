@@ -35,6 +35,7 @@ var server = express();
 var port = process.env.PORT || 3000;
 
 var inventoryModel = require("./schema.js");
+var orderModel = require("./orderSchema.js");
 
 //middleware
 // server.use(cors());
@@ -276,6 +277,88 @@ server.put("/inventory/:id", ensureAuthentication, function(req, res){
 
 server.delete("/inventory/:id", ensureAuthentication, function(req, res){
     inventoryModel.findByIdAndDelete(req.params.id).then(function(){
+        res.status(204).send();
+    }).catch(function(error){
+        res.status(400).json({msg: error.message});
+    });
+});
+
+server.get("/order", ensureAuthentication, function(req, res){
+    orderModel.find().then(function(order){
+        res.json({
+            order: order
+        });
+    }).catch(function(error){
+        res.status(400).json({msg: error.message});
+    });
+});
+
+server.post("/order", function(req, res){
+    orderModel.create({
+        customer: req.body.customer,
+        sku: req.body.sku,
+        title: req.body.title,
+        category: req.body.category,
+        marketplace: req.body.marketplace,
+        quantity: req.body.quantity,
+        price: req.body.price,
+        location: req.body.location,
+    }).then(function(new_order){
+        res.status(201);
+        res.json({
+            new_order: new_order
+        });
+    }).catch(function(error){
+        res.status(400).json({msg: error.message});
+    });
+});
+
+server.put("/order/:id", function(req, res){
+    orderModel.findById(req.params.id).then(function(order){
+        if (order == null){
+            res.status(404);
+            res.json({
+                msg: `There is no order with the ID of ${req.params.id}`
+            });
+        } else {
+            if (req.body.customer != undefined){
+                order.customer = req.body.customer;
+            }
+            if (req.body.sku != undefined){
+                order.sku = req.body.sku;
+            }
+            if (req.body.title != undefined){
+                order.title = req.body.title;
+            }
+            if (req.body.category != undefined){
+                order.category = req.body.category;
+            }
+            if (req.body.marketplace != undefined){
+                order.marketplace = req.body.marketplace;
+            }
+            if (req.body.quantity != undefined){
+                order.quantity = req.body.quantity;
+            }
+            if (req.body.price != undefined){
+                order.price = req.body.price;
+            }
+            if (req.body.location != undefined){
+                order.location = req.body.location;
+            }
+            order.save().then(function(){
+                res.status(200);
+                res.json({
+                    order: order
+                });
+            });
+        }
+    }).catch(function(error){
+        res.status(400).json({msg: error.message});
+    });
+});
+
+server.delete("/order/:id", function(req, res){
+    orderModel.findByIdAndDelete(req.params.id).then(function(){
         res.status(204).send();
     }).catch(function(error){
         res.status(400).json({msg: error.message});
