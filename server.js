@@ -210,7 +210,7 @@ server.post("/inventory", function(req, res){
     });
 });
 
-server.put("/inventory/:id", function(req, res){
+server.put("/inventory/:id", ensureAuthentication, function(req, res){
     inventoryModel.findById(req.params.id).then(function(inventory){
         if (inventory == null){
             res.status(404);
