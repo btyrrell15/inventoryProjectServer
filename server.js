@@ -181,6 +181,23 @@ server.get('/logout', function(req, res){
 
 
 //Rest endpoints
+server.get("/users/:id", function(req, res){
+    userModel.findById(req.params.id).then(function(user){
+        if(user == null) {
+            res.status(404);
+            res.json({
+                msg: `There is no user with the ID of ${req.params.id}`
+            });
+        } else {
+            res.json({
+                user: user
+            })
+        }
+    }).catch(function(error){
+        res.status(400).json({msg: error.message});
+    });
+});
+
 server.get("/inventory", ensureAuthentication, function(req, res){
     inventoryModel.find().then(function(inventory){
         res.json({
