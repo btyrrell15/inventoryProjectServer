@@ -45,6 +45,7 @@ server.use(function(req, res, next){
 });
 server.options("*", function(req, res, next){
     res.header("Access-Control-Allow-Headers", "Content-Type");
+    res.header("Access-Control-Allow-Methods", "DELETE, PUT, OPTIONS");
     next();
 });
 server.use(express.json());
@@ -190,7 +191,7 @@ server.get("/inventory", ensureAuthentication, function(req, res){
     });
 });
 
-server.post("/inventory", function(req, res){
+server.post("/inventory", ensureAuthentication, function(req, res){
     inventoryModel.create({
         sku: req.body.sku,
         image: req.body.image,
@@ -254,7 +255,7 @@ server.put("/inventory/:id", ensureAuthentication, function(req, res){
     });
 });
 
-server.delete("/inventory/:id", function(req, res){
+server.delete("/inventory/:id", ensureAuthentication, function(req, res){
     inventoryModel.findByIdAndDelete(req.params.id).then(function(){
         res.status(204).send();
     }).catch(function(error){
