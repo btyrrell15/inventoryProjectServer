@@ -221,6 +221,7 @@ server.post("/inventory", ensureAuthentication, function(req, res){
         quantity: req.body.quantity,
         cost: req.body.cost,
         location: req.body.location,
+        date: req.body.date
     }).then(function(new_item){
         res.status(201);
         res.json({

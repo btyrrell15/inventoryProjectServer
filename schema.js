@@ -33,6 +33,10 @@ const inventorySchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    date: {
+        type: String,
+        required: true,
+    }
 });
 
 var model = mongoose.model("inventory", inventorySchema); // "posts" will be the name of the collection within the database
