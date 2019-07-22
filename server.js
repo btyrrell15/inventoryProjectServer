@@ -211,7 +211,7 @@ server.get("/inventory", ensureAuthentication, function(req, res){
     });
 });
 
-server.post("/inventory", ensureAuthentication, function(req, res){
+server.post("/inventory", function(req, res){
     inventoryModel.create({
         sku: req.body.sku,
         image: req.body.image,
