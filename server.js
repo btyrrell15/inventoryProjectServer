@@ -296,7 +296,7 @@ server.get("/order", ensureAuthentication, function(req, res){
     });
 });
 
-server.post("/order", function(req, res){
+server.post("/order", ensureAuthentication, function(req, res){
     orderModel.create({
         customer: req.body.customer,
         sku: req.body.sku,
