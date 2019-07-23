@@ -306,6 +306,7 @@ server.post("/order", ensureAuthentication, function(req, res){
         quantity: req.body.quantity,
         price: req.body.price,
         location: req.body.location,
+        status: req.body.status,
     }).then(function(new_order){
         res.status(201);
         res.json({
@@ -347,6 +348,9 @@ server.put("/order/:id", function(req, res){
             }
             if (req.body.location != undefined){
                 order.location = req.body.location;
+            }
+            if (req.body.status != undefined){
+                order.status = req.body.status;
             }
             order.save().then(function(){
                 res.status(200);
