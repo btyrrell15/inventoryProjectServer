@@ -33,6 +33,10 @@ const orderSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    status: {
+        type: String,
+        required: true,
+    }
 });
 
 var models = mongoose.model("orders", orderSchema); // "posts" will be the name of the collection within the database
