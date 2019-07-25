@@ -377,6 +377,7 @@ server.post("/ebay", ensureAuthentication, function(req, res){
     var sku = req.body.sku;
     var ebayUrl = `${url + sku}`
     console.log("ebay endpoint url", ebayUrl);
+    res.send();
 });
 
 
