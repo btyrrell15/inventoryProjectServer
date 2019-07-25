@@ -377,52 +377,55 @@ server.post("/ebay", ensureAuthentication, function(req, res){
     var sku = req.body.sku;
     var ebayUrl = `${url + sku}`
     console.log("ebay endpoint url", ebayUrl);
+    fetchEbay(ebayUrl);
     res.send();
 });
 
 
-// fetch(`${url}`, {
-//     method: "GET",
-//     headers: {"Authorization": "Bearer v^1.1#i^1#I^3#r^0#p^3#f^0#t^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"},
-// }).then(res => res.json()).then(data => {
-//     saveEbay(data);
-//     console.log(data.categoryId);
-//
-// });
-//
-//
-//
-// var saveEbay = function(data){
-//     console.log(data);
-//     var rawId = data.itemId;
-//     var newId = rawId.slice(3, 15);
-//     var itemExists = "";
-//     inventoryModel.findOne({sku: newId}).then(function(item){
-//         //itemExists = item.sku
-//         //console.log("this is the item logged", itemExists);
-//         if (item == null) {
-//             console.log(data.title);
-//             console.log(data.estimatedAvailabilities[0].estimatedAvailableQuantity)
-//             inventoryModel.create({
-//                 sku: newId,
-//                 image: "none",
-//                 title: data.title,
-//                 category: data.categoryId,
-//                 marketplace: "eBay",
-//                 quantity: data.estimatedAvailabilities[0].estimatedAvailableQuantity,
-//                 cost: data.price.value,
-//                 location: data.itemLocation.postalCode,
-//                 date: new Date(),
-//             }).then(function(new_item){
-//                 console.log(new_item);
-//             }).catch(function(error){
-//                 console.log(error);
-//             });
-//         } else {
-//             console.log("Item already exists", item.sku);
-//         }
-//     });
-// };
+var fetchEbay = function(ebayUrl) {
+    fetch(`${ebayUrl}`, {
+        method: "GET",
+        headers: {"Authorization": "Bearer v^1.1#i^1#I^3#r^0#p^3#f^0#t^H4sIAAAAAAAAAOVYf2zUVBzf7RcZc2AiOiOiRxWNQO/a6/V6Lez0xg43gW3sxoCZMV7b163Qa4/2ddsp0bkZjIkRlRhFjY7EP/SPqUsMZEYUQwx/+INkEmNA+MdEyFQgqFEwgK/ddtxmHLs7YpZ4//Te6/fX5/v9vO97r1RvadnSXbW7/qjwzCkc6KV6Cz0eupwqKy1ZNq+o8I6SAipDwDPQe29vcV/RmZUWSGhJoQlaSUO3oLcnoemW4E5WEbapCwawVEvQQQJaApKEeHTdWiHgo4SkaSBDMjTCW1dTRYQ4JhhiFIrn5FCYZTk8q0/YbDaqCIaXWRiURYUKS3SYpfB7y7JhnW4hoKMqIkDRPElxZIBppkNCgBco1hcOcq2EtwWalmroWMRHERE3XMHVNTNinT5UYFnQRNgIEamLro43ROtqYvXNK/0ZtiLjeYgjgGxr8miVIUNvC9BsOL0by5UW4rYkQcsi/JExD5ONCtGJYHII3001G+YVioOMyHIgRDPsDUnlasNMADR9HM6MKpOKKypAHakodb2M4myI26CExkf12ERdjdd5rLeBpioqNKuIWHV084Z4rInwxhsbTaNLlaHsIKWZIEOzPM8REQQtnEJotqt6F/ZsmKnAuLcxk+O5nuJulaHLqpM5y1tvoGqIQ4dTE0RnJAgLNegNZlRBTliZcuF0IoOtTmXHSmmjTt0pLkzgmLzu8PplmODFNSbcKGaIEhUI8sGQFA5ByIfETGY4az1XdkScAkUbG/1OLFAEKTIBzO0QJTUgQVLC6bUT0FRlgWGVABNWICmHeIUM8opCiqwcImkFQgpCUZT48P+OJAiZqmgjmCbK1Bcu0irCSaygAkVAxnaoN6eSkJgq6TahcXb0WFVEJ0JJwe/v7u72dTM+w+zwByiK9m9atzYudcIEINKy6vWFSdWlrgSxlqUKCAdQRfRgGmLnegcRaYqtborFa9ubG9bE6icoPCmyyNTZf0Eal4wkbDQ0VUrNLoiMKTcCE6Wq7RQex6Gm4UdeUC0H6n8N0l3r0wJ1bFjYCEiqPod3PslI+A2AG5gz1e5G7Z2JkF+0UzgGGZo+EwLZ0LXUzPU6bLxgx7RnpmThivjGeg+GkaXHycpZ6KS7SS4O08pZ6ABJMmwd5eJuXDULDcXWFFXTnMaUi8MM9WzC1IGWQqpk5V5Dd/PB6bXUjk6UrR08h3csrC8BBDQjWyo55LU6jWTSYaGEO0YWa0VR8FoBtuRu9NkFi7c899CVGa2z1nOygTuFquWatrSVZKehw7ytAFk28ZE5bzvOCSknEqu60yytvFp9NJmsSyRsBEQN1smzbGNjKJrh84Y3y1BVmyrAByWTnGiyZLx6EynLYYmTuJBEBkGAColBJS/cNbBrtuAu7itsm8COEeJ7NB/ER23Ak0HIMKQoKiEyLHIiGwxSnALYvHCv0lSc09l3DK01LATl/KDhS9PsAuXydpy2LCPhWrIhQAZZiP9xzgVDBuGZQp4ykXHt+Me10z/540+kwP3RfZ6DVJ9nuNDjoTiKpJdRD5QWbSguuomwVAR9FtBl0ejx4auKD2++OkC2CX3bYSoJVLOw1KMePyb9mfHZaaCNuj394amsiC7P+ApF3XntTQk9v7KC5ikuwNChAE+xrdQ9194W07cVLxhcPvjklcHBE89d3HLp16eoUa7ydDdVkRbyeEoKivs8BX0/vK1En94aeVz4uLny9/dOny2q3TvcHPZffuOJ9cvlrW09rQMl528hQKu+maaXfT9ydl7/51bT1ycP9h+5suWju/jKkWcuvy8PXfmtq6LwnaWV2waPDh05u7/tcFvr/RX9iU7y5+aWkeDxlw8nlpOXAT386c6/Xnx97ruLrr75SvniH49GLpbsHfrgzIrdo6OfNH3ZPXjo1YVzWh86sad355IPF6ObA4+c0x+be/6Xw6de2vzoqfKhW8uuzju3+Ai1sW3orQvDqL12RdGBfQ+ORL7rurCEXHmokVtw4bPYjt2j+87RIwdiXz1/7JuWhhcurXmtgp5P/hR7lll48r4vNs7vUHbc7V/x7ZpF/fv3PDxWxr8BfnPUuBAUAAA="},
+    }).then(res => res.json()).then(data => {
+        saveEbay(data);
+        console.log(data.categoryId);
+
+    });
+};
+
+
+
+var saveEbay = function(data){
+    console.log(data);
+    var rawId = data.itemId;
+    var newId = rawId.slice(3, 15);
+    var itemExists = "";
+    inventoryModel.findOne({sku: newId}).then(function(item){
+        //itemExists = item.sku
+        //console.log("this is the item logged", itemExists);
+        if (item == null) {
+            console.log(data.title);
+            console.log(data.estimatedAvailabilities[0].estimatedAvailableQuantity)
+            inventoryModel.create({
+                sku: newId,
+                image: "none",
+                title: data.title,
+                category: data.categoryId,
+                marketplace: "eBay",
+                quantity: data.estimatedAvailabilities[0].estimatedAvailableQuantity,
+                cost: data.price.value,
+                location: data.itemLocation.postalCode,
+                date: new Date(),
+            }).then(function(new_item){
+                console.log(new_item);
+            }).catch(function(error){
+                console.log(error);
+            });
+        } else {
+            console.log("Item already exists", item.sku);
+        }
+    });
+};
 
 //start the server and connect to database
 mongoose.connect("mongodb+srv://btyrrell:fakepassword@mydatabase-izpfk.mongodb.net/Test?retryWrites=true&w=majority",{
